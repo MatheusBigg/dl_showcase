@@ -12,10 +12,10 @@ def test_health_check():
     assert response.status_code == HTTPStatus.OK
     data = response.json()
     assert data['status'] == 'running'
-    assert data['message'] == 'Welcome to DL House Objects!'
+    assert data['message'] == 'Welcome to Deep Learning SHOWCASE!'
 
 
 def test_root():
     response = client.get('/welcome')
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {'message': 'Welcome to DL House Objects!'}
+    assert response.json() == {'message': 'Welcome to Deep Learning SHOWCASE!'}

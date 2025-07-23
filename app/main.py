@@ -4,9 +4,9 @@ from loguru import logger
 from app.config.settings import settings
 
 app = FastAPI(
-    title='DL House Objects',
+    title='Deep Learning SHOWCASE',
     version=settings.VERSION,
-    description='API for household objects detection',
+    description='API for showcasing my Deep Learning Projetcs!',
 )
 
 
@@ -21,10 +21,10 @@ async def health_check():
         'status': 'running',
         'version': settings.VERSION,
         'environment': settings.ENVIRONMENT,
-        'message': 'Welcome to DL House Objects!',
+        'message': 'Welcome to Deep Learning SHOWCASE!',
     }
 
 
 @app.get('/welcome')
 async def root():
-    return {'message': 'Welcome to DL House Objects!'}
+    return {'message': 'Welcome to Deep Learning SHOWCASE!'}

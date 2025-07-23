@@ -179,17 +179,20 @@ pyrightconfig.json
 
 
 # Folders
-dl_model/
+dl_models/
 # Mantém o data.yaml do dataset unificado
-!dl_model/df_unified/data.yaml  
+!dl_models/*/dl_model/df_unified/data.yaml  
+!dl_models/*/dl_training/
+# Permitir apenas os arquivos best.pt
+!dl_models/*/dl_model/best.pt
+!dl_models/*/dl_training/best.pt
 
 # === MLflow Local ===
 # Dados de experimentos locais
 mlflow/  
-!mlflow/meta.yaml
-!mlflow/metrics/*.json        
-# Alternativo para runs do MLflow
-mlruns/          
+shared/mlflow/mlruns/**  
+!shared/mlflow/mlruns/*/meta.yaml
+!shared/mlflow/metrics/*.json        
 
 # === YOLO Training ===
 # Pasta de treinos do Ultralytics
@@ -197,7 +200,7 @@ runs/
 # Exclui modelos treinados (exceto o final)         
 *.pt   
 # Mantém APENAS o modelo final (opcional)          
-!dl_model/best.pt 
+!dl_house_objects/best.pt 
 
 # === Logs & Temporários ===
 *.log
