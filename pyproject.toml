@@ -1,0 +1,56 @@
+[project]
+name = "dl-house-objects"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.116.1",
+    "jupyter>=1.1.1",
+    "opencv-python>=4.11.0.86",
+    "pandas>=2.3.1",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+    "python-dotenv>=1.1.1",
+    "scikit-learn>=1.7.1",
+    "torch>=2.7.1",
+    "torchvision>=0.22.1",
+    "ultralytics>=8.3.169",
+]
+
+[dependency-groups]
+dev = [
+    "loguru>=0.7.3",
+    "mlflow>=3.1.3",
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
+    "rich>=14.0.0",
+    "ruff>=0.12.4",
+    "taskipy>=1.14.1",
+]
+
+[tool.ruff]
+line-length = 79
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT', 'FAST']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+asyncio_default_fixture_loop_scope = 'function'
+
+[tool.taskipy.tasks]
+lint = 'ruff check'
+pre_format = 'ruff check --fix'
+format = 'ruff format'
+run = 'fastapi dev app/main.py'
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=app -vv'
+post_test = 'coverage html'
