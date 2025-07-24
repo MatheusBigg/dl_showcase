@@ -1,0 +1,41 @@
+path: dl_models/dl_house_objects/dl_model/df_unified/
+train: images/train
+val: images/val
+names:
+  0: bed
+  1: sofa
+  2: chair
+  3: table
+  4: lamp
+  5: tv
+  6: laptop
+  7: wardrobe
+  8: window
+  9: door
+  10: potted_plant
+  11: photo_frame
+  12: 1000baht
+  13: 100baht
+  14: 20baht
+  15: 500baht
+  16: 50baht
+  17: backpack
+  18: book
+  19: box
+  20: charger_cable
+  21: earphone
+  22: fan
+  23: fork
+  24: glass
+  25: key
+  26: knife
+  27: mouth_mask
+  28: outlet
+  29: plate
+  30: spoon
+  31: tv_remote
+  32: vase
+  33: walking_stick
+  34: bottle
+  35: cup
+nc: 36
