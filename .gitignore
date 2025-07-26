@@ -189,17 +189,14 @@ dl_models/*
 
 # === MLflow Local ===
 # Dados de experimentos locais
-mlflow/
-shared/mlflow/mlruns/
-shared/mlflow/mlartifacts/
-shared/mlflow/*.db
-shared/mlflow/*.db-*
+shared/mlflow/
+
 # Mantém apenas configurações importantes
 !shared/mlflow/.gitkeep
 
 # === YOLO Training ===
 # Pasta de treinos do Ultralytics
-runs/
+shared/runs/
 # Exclui modelos treinados (exceto os finais específicos)
 *.pt
 # Mantém APENAS os modelos finais importantes

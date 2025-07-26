@@ -7,21 +7,25 @@ script_dir = Path(__file__).parent.absolute()
 project_root = script_dir.parent.parent.parent
 data_yaml_path = project_root / "dl_models" / "dl_house_objects" / "dl_model" / "df_unified" / "data.yaml"
 mlflow_path = project_root / "shared" / "mlflow"
+yolo_runs_path = project_root / "shared" / "runs"  # Novo diretório para runs do YOLO
 
-model_name = 'house_objects_yolov8_custom'
-yolo_version_weight = 'yolov8s.pt'  #yolov9c.pt'
+mlflow_path.mkdir(parents=True, exist_ok=True)
+yolo_runs_path.mkdir(parents=True, exist_ok=True)
+
 
 class CustomTrainer:
     def __init__(self):
+        self.model_name = 'house_objects_yolov9_custom'
+        self.yolo_version_weight = 'yolov9c.pt'  #yolov8s yolov9c.pt'
+
         self.config = {
-            'weights': yolo_version_weight,  # Modelo pré-treinado YOLOv8
             'data': str(data_yaml_path),
             'epochs': 100,
-            'batch_size': 16,
+            'batch': 16,
             'imgsz': 640,
             'freeze':5,
             'device': 'cuda:0' if torch.cuda.is_available() else 'cpu',
-            'name': model_name,
+            'name': self.model_name,
             'optimizer': 'AdamW',
             'lr0': 0.0001,
             'lrf': 0.01,
@@ -36,58 +40,52 @@ class CustomTrainer:
             'translate': 0.1,
             'scale': 0.5,
             'patience': 10,
-            'workers': 8
+            'workers': 8,
+            'project': str(yolo_runs_path),  # Diretório para salvar os resultados
         }
 
     def train(self):
-        #mlflow.set_tracking_uri("file:" + str(Path("/shared/mlflow").absolute()))
-        mlflow.set_tracking_uri("file:" + str(mlflow_path))
-        mlflow.set_experiment("DL_House_Objects_YOLOv8-Custom")
+        mlflow.set_tracking_uri(f"file://{mlflow_path.resolve()}")
+        mlflow.set_experiment("DL_House_Objects_YOLOv8")
         
-        with mlflow.start_run():
+        with mlflow.start_run(run_name='YOLOv9_100_EPOCHS'):
             mlflow.log_params(self.config)
-            model = YOLO(self.config['weights'])
+            model = YOLO(self.yolo_version_weight)
+            results = model.train(**self.config)
+
+            mlflow.set_tags({
+                "task": "house-objects-detection",
+                "framework": "YOLOv8",
+                "dataset": Path(self.config['data']).stem,
+                })
             
-            results = model.train(
-                data=self.config['data'],
-                epochs=self.config['epochs'],
-                batch=self.config['batch_size'],
-                imgsz=self.config['imgsz'],
-                freeze=self.config['freeze'],
-                device=self.config['device'],
-                name=self.config['name'],
-                optimizer=self.config['optimizer'],
-                lr0=self.config['lr0'],
-                lrf=self.config['lrf'],
-                momentum=self.config['momentum'],
-                weight_decay=self.config['weight_decay'],
-                warmup_epochs=self.config['warmup_epochs'],
-                hsv_h=self.config['hsv_h'],
-                hsv_s=self.config['hsv_s'],
-                hsv_v=self.config['hsv_v'],
-                degrees=self.config['degrees'],
-                translate=self.config['translate'],
-                scale=self.config['scale'],
-                workers=self.config['workers']
-            )
-            
-            # Métricas
-            mlflow.log_metrics({
-                "mAP50": results.results_dict.get("metrics/mAP50(B)", 0.0),
-                "mAP50_95": results.results_dict.get("metrics/mAP50-95(B)", 0.0), 
-                "precision": results.results_dict.get("metrics/precision(B)", 0.0),
-                "recall": results.results_dict.get("metrics/recall(B)", 0.0),
-                "f1": results.results_dict.get("metrics/F1(B)", 0.0),
-                "inference_speed_ms": results.results_dict.get("speed/inference", 0.0),
-                "nms_speed_ms": results.results_dict.get("speed/nms", 0.0),
-                "preprocess_speed_ms": results.results_dict.get("speed/preprocess", 0.0)
-            })
+            try:
+                # Métricas
+                mlflow.log_metrics({
+                    "mAP50": results.results_dict.get("metrics/mAP50(B)", 0.0),
+                    "mAP50_95": results.results_dict.get("metrics/mAP50-95(B)", 0.0), 
+                    "precision": results.results_dict.get("metrics/precision(B)", 0.0),
+                    "recall": results.results_dict.get("metrics/recall(B)", 0.0),
+                    "f1": results.results_dict.get("metrics/F1(B)", 0.0),
+                    "inference_speed_ms": results.results_dict.get("speed/inference", 0.0),
+                    "nms_speed_ms": results.results_dict.get("speed/nms", 0.0),
+                    "preprocess_speed_ms": results.results_dict.get("speed/preprocess", 0.0)
+                })
+
+            except:
+                # Problema pra gerar as metricas
+                print("Problema pra gerar as metricas")
+                pass
             
             # Salva o melhor modelo
-            mlflow.log_artifact(
-                Path(results.save_dir) / "weights" / "best.pt",
-                "model"
-            )
+            try:
+                best_model_path = Path(results.save_dir) / "weights" / "best.pt"
+                if best_model_path.exists():
+                    mlflow.log_artifact(str(best_model_path), "weights")
+                else:
+                    print("Arquivo best.pt não encontrado")
+            except Exception as e:
+                print(f"Erro ao salvar modelo: {e}")
 
 if __name__ == '__main__':
     trainer = CustomTrainer()
