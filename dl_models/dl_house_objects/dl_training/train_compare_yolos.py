@@ -27,12 +27,14 @@ class CustomTrainer:
             'device': 'cuda:0' if torch.cuda.is_available() else 'cpu',
             'name': self.model_name,
             'optimizer': 'AdamW',
-            'lr0': 0.0001,
+            'lr0': 3e-5, #1e-4
             'lrf': 0.01,
             'momentum': 0.937,
             'weight_decay': 0.0005,
             'warmup_epochs': 3,
             'augment': True,
+            'mosaic': 0.5,
+            'mixup': 0.2,
             'hsv_h': 0.015,
             'hsv_s': 0.7,
             'hsv_v': 0.4,
@@ -46,7 +48,7 @@ class CustomTrainer:
 
     def train(self):
         mlflow.set_tracking_uri(f"file://{mlflow_path.resolve()}")
-        mlflow.set_experiment("DL_House_Objects_YOLOv8")
+        mlflow.set_experiment("DL_House_Objects_YOLOv")
         
         with mlflow.start_run(run_name='YOLOv9_100_EPOCHS'):
             mlflow.log_params(self.config)
@@ -55,7 +57,7 @@ class CustomTrainer:
 
             mlflow.set_tags({
                 "task": "house-objects-detection",
-                "framework": "YOLOv8",
+                "framework": "YOLOv9",
                 "dataset": Path(self.config['data']).stem,
                 })
             
