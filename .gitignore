@@ -179,13 +179,14 @@ pyrightconfig.json
 
 
 # Folders
-dl_models/*
+dl_models/**
+
+!dl_models/**/main.py
+!dl_models/**/detect_object.py
+
 # Mantém o data.yaml do dataset unificado
-!dl_models/*/dl_model/df_unified/data.yaml  
-!dl_models/*/dl_training/
-# Permitir apenas os arquivos best.pt
-!dl_models/*/dl_model/best.pt
-!dl_models/*/dl_training/best.pt
+!dl_models/**/dl_model/df_unified/data.yaml  
+!dl_models/**/dl_training/**
 
 # === MLflow Local ===
 # Dados de experimentos locais
