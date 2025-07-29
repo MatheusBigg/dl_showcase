@@ -184,6 +184,7 @@ dl_models/**
 !dl_models/**/main.py
 !dl_models/**/detect_object.py
 !dl_models/**/README.md
+!dl_models/**/dl_model/imgs_to_predict/*.jpg
 
 # Mantém o data.yaml do dataset unificado
 !dl_models/**/dl_model/df_unified/data.yaml  
