@@ -102,8 +102,10 @@ Com mais dados e mais treino, o modelo pode ser ainda mais robusto para a propdu
 O modelo base contudo é um ótimo modelo para prototipagem rápida
 
 ## Resultados:
+
 Antes:
 ![Resultados](dl_model/imgs_to_predict/house_interior.jpg)
+
 Depois:
 ![Resultados](dl_model/imgs_to_predict/predict_house_interior.jpg)
 
