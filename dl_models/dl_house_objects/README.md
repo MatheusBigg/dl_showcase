@@ -2,6 +2,7 @@
 # Detecção de Objetos Domésticos
 
 Modelo YOLOv9 para detecção em tempo real de objetos domésticos comuns (copos, garrafas, sofas, cadeiras, laptops, quadros e etc).
+Utilizado MLFlow para comparação de resultados e métricas de modelos treinados.
 
 ## Estrutura do Modelo
 
@@ -41,7 +42,10 @@ Criando também o arquivo data.yaml com as 36 classes unidas:
 - Avaliação final e utilização
 
 ## Treino e Comparação de Modelos
-Foi treinado 4 modelos com YOLOv8 e YOLOv9 com early stop (patience=10), resultando basicamente em:
+Foi treinado 4 modelos com YOLOv8 e YOLOv9 com early stop (patience=10)
+![MLFlow Comparativo](dl_model/imgs_to_predict/MLFlow_metrics.png)
+
+Resultando basicamente em:
 
 | Modelo	            | mAP50-95	| mAP50	| Precisão	| Recall	|Tempo   |
 |-----------------------|-----------|-------|-----------|-----------|--------|
